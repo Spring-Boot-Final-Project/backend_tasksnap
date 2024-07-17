@@ -1,12 +1,13 @@
 package com.finalProject.taskSnap.services;
 
+import com.finalProject.taskSnap.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserService {
-    private final UserService userService;
+    private final UserRepository userRepository;
 
-    public UserService(UserService userService){
-        this.userService = userService;
+    public UserService(UserRepository userRepository){
+        this.userRepository = userRepository;
     }
 }

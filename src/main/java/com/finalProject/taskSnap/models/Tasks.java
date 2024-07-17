@@ -16,7 +16,7 @@ import java.time.LocalTime;
 @NoArgsConstructor
 public class Tasks {
     @Id
-    private String id;
+    private int id;
     private String title;
     private String status;
     private String assignedTo;
