@@ -19,7 +19,6 @@ public class Tasks {
     private int id;
     private String title;
     private String status;
-    private String assignedTo;
     private LocalDate startDate;
     private LocalTime startTime;
     private LocalDate dueDate;
