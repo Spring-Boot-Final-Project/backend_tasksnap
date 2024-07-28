@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
+// CrossOrigin to allow the frontend to access the backend
 @CrossOrigin
 public class TaskController {
     private final TaskService taskService;
