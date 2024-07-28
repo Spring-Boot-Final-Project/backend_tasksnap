@@ -1,7 +1,10 @@
 package com.finalProject.taskSnap.controllers;
 
+import com.finalProject.taskSnap.models.TaskSnapUsers;
 import com.finalProject.taskSnap.models.Tasks;
 import com.finalProject.taskSnap.services.TaskService;
+import com.finalProject.taskSnap.services.UserService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -12,14 +15,15 @@ import java.util.Optional;
 @CrossOrigin
 public class TaskController {
     private final TaskService taskService;
+    private final UserService userService;
 
-    public TaskController(TaskService taskService){
+    public TaskController(TaskService taskService, UserService userService){
         this.taskService = taskService;
+        this.userService = userService;
     }
 
     @GetMapping("/")
     public List<Tasks> homepage(){
-
         return taskService.getAllTask();
     }
 
@@ -31,15 +35,31 @@ public class TaskController {
 
     // Create task
     @PostMapping("/create")
-    public int createTask(@RequestBody Tasks task){
-        return taskService.saveTask(task);
+    public ResponseEntity<String> createTask(@RequestBody Tasks task){
+
+        try{
+            taskService.saveTask(task);
+        } catch (IllegalStateException e) {
+            return ResponseEntity.badRequest().body("Error: " + e.getMessage());
+        }
+        return ResponseEntity.ok("Task created successfully");
     }
 
     // Update task
     @PutMapping("/update/{id}")
-    public int updateTask(@PathVariable int id, @RequestBody Tasks task){
+    public ResponseEntity<String> updateTask(@PathVariable int id, @RequestBody Tasks task){
+        TaskSnapUsers existedUser = userService.getUserById(task.getTaskSnapUsers().getId());
+        if(existedUser != null){
+            task.setTaskSnapUsers(existedUser);
+        }
         task.setId(id);
-        return taskService.updateTask(task);
+
+        try{
+            taskService.updateTask(task);
+        } catch (IllegalStateException e) {
+            return ResponseEntity.badRequest().body("Error: " + e.getMessage());
+        }
+        return ResponseEntity.ok("Task updated successfully");
     }
 
     // Delete task
