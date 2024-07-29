@@ -11,8 +11,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class TaskSnapUsers {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
+
+    @Column(nullable = false, unique = true)
     private String email;
+
+    @Column(nullable = false, unique = true)
     private String name;
+
+    @Column(nullable = false, length = 64)
+    private String password;
 }
