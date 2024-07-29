@@ -12,20 +12,24 @@ public class TaskService {
     private final TaskRepository taskRepository;
 
     public TaskService(TaskRepository taskRepository){
-
         this.taskRepository = taskRepository;
+    }
+
+    public List<Tasks> hideUsers(List<Tasks> tasks){
+        for(Tasks task: tasks){
+            task.setTaskSnapUsers(null);
+        }
+        return tasks;
     }
 
     // Save tasks
     public void saveTask(Tasks task){
-        Tasks existingTask = taskRepository.findById(task.getId()).orElse(null);
-        if(existingTask != null) throw new IllegalStateException("Task with ID " + task.getId() + " already exists");
         taskRepository.save(task);
     }
 
     // List All tasks
     public List<Tasks> getAllTask(){
-        return taskRepository.findAll();
+        return hideUsers(taskRepository.findAll());
     }
 
     // List task by id
@@ -37,6 +41,7 @@ public class TaskService {
     public void updateTask(Tasks task) {
         Optional<Tasks> existingTask = taskRepository.findById(task.getId());
         if (existingTask.isPresent()) {
+//            Create a managed task which refers to the existing task
             Tasks managedTask = existingTask.get();
             managedTask.setTitle(task.getTitle());
             managedTask.setStatus(task.getStatus());

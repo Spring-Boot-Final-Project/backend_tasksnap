@@ -36,7 +36,10 @@ public class TaskController {
     // Create task
     @PostMapping("/create")
     public ResponseEntity<String> createTask(@RequestBody Tasks task){
-
+        TaskSnapUsers existedUser = userService.getUserById(task.getTaskSnapUserId());
+        if(existedUser != null){
+            task.setTaskSnapUsers(existedUser);
+        }
         try{
             taskService.saveTask(task);
         } catch (IllegalStateException e) {
@@ -48,7 +51,7 @@ public class TaskController {
     // Update task
     @PutMapping("/update/{id}")
     public ResponseEntity<String> updateTask(@PathVariable int id, @RequestBody Tasks task){
-        TaskSnapUsers existedUser = userService.getUserById(task.getTaskSnapUsers().getId());
+        TaskSnapUsers existedUser = userService.getUserById(task.getTaskSnapUserId());
         if(existedUser != null){
             task.setTaskSnapUsers(existedUser);
         }
