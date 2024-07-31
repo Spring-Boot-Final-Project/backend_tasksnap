@@ -56,7 +56,6 @@ public class TaskController {
             task.setTaskSnapUsers(existedUser);
         }
         task.setId(id);
-
         try{
             taskService.updateTask(task);
         } catch (IllegalStateException e) {
