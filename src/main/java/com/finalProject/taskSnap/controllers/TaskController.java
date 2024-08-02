@@ -38,6 +38,7 @@ public class TaskController {
     public ResponseEntity<String> createTask(@RequestBody Tasks task){
         TaskSnapUsers existedUser = userService.getUserById(task.getTaskSnapUserId());
         if(existedUser != null){
+//            Assign the TaskSnapUsers object to the task
             task.setTaskSnapUsers(existedUser);
         }
         try{
@@ -53,6 +54,7 @@ public class TaskController {
     public ResponseEntity<String> updateTask(@PathVariable int id, @RequestBody Tasks task){
         TaskSnapUsers existedUser = userService.getUserById(task.getTaskSnapUserId());
         if(existedUser != null){
+//            Assign the TaskSnapUsers object to the task
             task.setTaskSnapUsers(existedUser);
         }
         task.setId(id);

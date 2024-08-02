@@ -44,5 +44,5 @@ public class Tasks {
     private TaskSnapUsers taskSnapUsers;
 
     @Column(name="fk_user_id", insertable = false, updatable = false)
-    private int taskSnapUserId;
+    private Integer taskSnapUserId;
 }
