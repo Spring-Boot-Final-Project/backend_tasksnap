@@ -40,7 +40,7 @@ public class Tasks {
 
     @ManyToOne
     @JoinColumn(name = "fk_user_id")
-    @Cascade(CascadeType.ALL)
+    @Cascade(CascadeType.PERSIST)
     private TaskSnapUsers taskSnapUsers;
 
     @Column(name="fk_user_id", insertable = false, updatable = false)

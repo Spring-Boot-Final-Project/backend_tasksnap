@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.management.InstanceAlreadyExistsException;
+import java.net.URI;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -42,6 +43,7 @@ public class GlobalExceptionHandler {
 
     private ProblemDetail createProblemDetail(HttpStatus status, String message, String description) {
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(status, message);
+        problemDetail.setType(URI.create("error"));
         problemDetail.setTitle(status.getReasonPhrase());
         problemDetail.setProperty("description", description);
         return problemDetail;
