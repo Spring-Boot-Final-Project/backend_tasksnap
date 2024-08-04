@@ -8,6 +8,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.management.InstanceAlreadyExistsException;
+
 @Service
 public class UserService {
     private final UserRepository userRepository;
@@ -26,9 +28,9 @@ public class UserService {
         return userRepository.findById(id).orElse(null);
     }
 
-    public void saveUser(TaskSnapUsers user) {
+    public void saveUser(TaskSnapUsers user) throws InstanceAlreadyExistsException {
         if (userRepository.findTaskSnapUsersByUsername(user.getUsername()).isPresent()) {
-            throw new IllegalStateException("Email is already registered");
+            throw new InstanceAlreadyExistsException("Email is already registered");
         }
         user.setPassword(encoder.encode(user.getPassword()));
         try {

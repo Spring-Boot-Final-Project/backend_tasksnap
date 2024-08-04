@@ -11,6 +11,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.*;
 
+import javax.management.InstanceAlreadyExistsException;
+
 
 @RestController
 @CrossOrigin
@@ -31,27 +33,19 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> authenticateUser(@RequestBody TaskSnapUsers user) {
-        try{
-            TaskSnapUsers authenticateUser = userService.authenticateUser(user);
-            String jwtToken = jwtService.generateToken(authenticateUser);
-            LoginResponse response =  LoginResponse.builder()
-                    .token(jwtToken)
-                    .expiresIn(jwtService.getExpirationTime())
-                    .build();
-            return ResponseEntity.ok(response);
-        } catch (Exception e){
-            return ResponseEntity.badRequest().build();
-        }
+        TaskSnapUsers authenticateUser = userService.authenticateUser(user);
+        String jwtToken = jwtService.generateToken(authenticateUser);
+        LoginResponse response =  LoginResponse.builder()
+                .token(jwtToken)
+                .expiresIn(jwtService.getExpirationTime())
+                .build();
+        return ResponseEntity.ok(response);
     }
 
 
     @PostMapping("/signup")
-    public ResponseEntity<String> registerUser(@RequestBody TaskSnapUsers user) {
-        try {
-            userService.saveUser(user);
-        } catch (IllegalStateException e) {
-            return ResponseEntity.badRequest().body("Error: " + e.getMessage());
-        }
+    public ResponseEntity<String> registerUser(@RequestBody TaskSnapUsers user) throws InstanceAlreadyExistsException {
+        userService.saveUser(user);
         return ResponseEntity.ok("User registered successfully");
     }
 
