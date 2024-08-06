@@ -1,4 +1,4 @@
-package com.finalProject.taskSnap.exceptions;
+package com.finalProject.taskSnap.handlers;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.security.SignatureException;

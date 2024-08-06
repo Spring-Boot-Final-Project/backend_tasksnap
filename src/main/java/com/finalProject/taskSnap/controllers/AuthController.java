@@ -26,10 +26,12 @@ public class AuthController {
         this.jwtService = jwtService;
     }
 
-    @GetMapping("/logout")
+    @PostMapping("/logout")
     public void customLogout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
+        System.out.println("Logging out");
         new SecurityContextLogoutHandler().logout(request, response, authentication);
     }
+
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> authenticateUser(@RequestBody TaskSnapUsers user) {
@@ -49,8 +51,4 @@ public class AuthController {
         return ResponseEntity.ok("User registered successfully");
     }
 
-    @GetMapping("/test")
-    public String test() {
-        return "Hello World";
-    }
 }

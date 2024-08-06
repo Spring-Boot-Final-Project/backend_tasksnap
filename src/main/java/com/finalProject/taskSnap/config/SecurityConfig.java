@@ -1,6 +1,7 @@
 package com.finalProject.taskSnap.config;
 
-import com.finalProject.taskSnap.exceptions.GlobalExceptionHandler;
+import com.finalProject.taskSnap.handlers.CustomLogoutSuccessHandler;
+import com.finalProject.taskSnap.handlers.GlobalExceptionHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.ProblemDetail;
@@ -39,18 +40,23 @@ public class SecurityConfig {
         http.cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/auth/login", "/auth/signup").permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .logout(logout ->
+                        logout
+                                .logoutUrl("/auth/logout")
+                                .logoutSuccessHandler(new CustomLogoutSuccessHandler())
+                                .invalidateHttpSession(true)
+                                .deleteCookies("JSESSIONID")
+                )
                 .exceptionHandling(exceptionHandling -> exceptionHandling
                         .accessDeniedHandler((request, response, accessDeniedException) -> {
                             ProblemDetail errorDetail = globalExceptionHandler.handleSecurityException(accessDeniedException);
                             response.setStatus(errorDetail.getStatus());
                             response.setContentType("application/json");
-
-                            // Manually create JSON response
                             String json = String.format(
                                     "{\"type\":\"%s\",\"title\":\"%s\",\"status\":%d,\"detail\":\"%s\",\"instance\":%s,\"description\":\"%s\"}",
                                     "about:blank",
@@ -66,8 +72,6 @@ public class SecurityConfig {
                             ProblemDetail errorDetail = globalExceptionHandler.handleSecurityException(authException);
                             response.setStatus(errorDetail.getStatus());
                             response.setContentType("application/json");
-
-                            // Manually create JSON response
                             String json = String.format(
                                     "{\"type\":\"%s\",\"title\":\"%s\",\"status\":%d,\"detail\":\"%s\",\"instance\":%s,\"description\":\"%s\"}",
                                     "about:blank",
