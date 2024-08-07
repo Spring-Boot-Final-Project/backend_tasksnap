@@ -28,6 +28,11 @@ public class UserService {
         return userRepository.findById(id).orElse(null);
     }
 
+    public TaskSnapUsers getUserByUsername(String username) {
+        return userRepository.findTaskSnapUsersByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    }
+
     public void saveUser(TaskSnapUsers user) throws InstanceAlreadyExistsException {
         if (userRepository.findTaskSnapUsersByUsername(user.getUsername()).isPresent()) {
             throw new InstanceAlreadyExistsException("Email is already registered");
