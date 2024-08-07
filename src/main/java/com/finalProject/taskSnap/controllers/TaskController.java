@@ -5,6 +5,8 @@ import com.finalProject.taskSnap.models.Tasks;
 import com.finalProject.taskSnap.services.TaskService;
 import com.finalProject.taskSnap.services.UserService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,9 +24,15 @@ public class TaskController {
         this.userService = userService;
     }
 
+    public int getCurrentUserId(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return userService.getUserByUsername(authentication.getName()).getId();
+    }
+
     @GetMapping("/")
     public List<Tasks> homepage(){
-        return taskService.getAllTask();
+        int currentUserId = getCurrentUserId();
+        return taskService.getAllTask(currentUserId);
     }
 
     // List task by id
@@ -36,7 +44,7 @@ public class TaskController {
     // Create task
     @PostMapping("/create")
     public ResponseEntity<String> createTask(@RequestBody Tasks task){
-        TaskSnapUsers existedUser = userService.getUserById(task.getTaskSnapUserId());
+        TaskSnapUsers existedUser = userService.getUserById(getCurrentUserId());
         if(existedUser != null){
 //            Assign the TaskSnapUsers object to the task
             task.setTaskSnapUsers(existedUser);
@@ -52,7 +60,7 @@ public class TaskController {
     // Update task
     @PutMapping("/update/{id}")
     public ResponseEntity<String> updateTask(@PathVariable int id, @RequestBody Tasks task){
-        TaskSnapUsers existedUser = userService.getUserById(task.getTaskSnapUserId());
+        TaskSnapUsers existedUser = userService.getUserById(getCurrentUserId());
         if(existedUser != null){
 //            Assign the TaskSnapUsers object to the task
             task.setTaskSnapUsers(existedUser);

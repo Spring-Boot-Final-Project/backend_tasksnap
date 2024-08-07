@@ -28,8 +28,8 @@ public class TaskService {
     }
 
     // List All tasks
-    public List<Tasks> getAllTask(){
-        return hideUsers(taskRepository.findAll());
+    public List<Tasks> getAllTask(int id){
+        return hideUsers(taskRepository.findByTaskSnapUserId(id));
     }
 
     // List task by id
