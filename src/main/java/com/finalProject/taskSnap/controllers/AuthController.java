@@ -26,13 +26,13 @@ public class AuthController {
         this.jwtService = jwtService;
     }
 
+//    Logs out the user
     @PostMapping("/logout")
     public void customLogout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
-        System.out.println("Logging out");
         new SecurityContextLogoutHandler().logout(request, response, authentication);
     }
 
-
+//    Authenticates the user. If successful, returns a JWT token
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> authenticateUser(@RequestBody TaskSnapUsers user) {
         TaskSnapUsers authenticateUser = userService.authenticateUser(user);
@@ -44,7 +44,7 @@ public class AuthController {
         return ResponseEntity.ok(response);
     }
 
-
+//    Registers a new user
     @PostMapping("/signup")
     public ResponseEntity<String> registerUser(@RequestBody TaskSnapUsers user) throws InstanceAlreadyExistsException {
         userService.saveUser(user);

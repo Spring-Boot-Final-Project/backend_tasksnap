@@ -24,15 +24,18 @@ public class UserService {
         this.authenticationManager = authenticationManager;
     }
 
+//    Get the user by id
     public TaskSnapUsers getUserById(int id) {
         return userRepository.findById(id).orElse(null);
     }
 
+//    Get the user by username
     public TaskSnapUsers getUserByUsername(String username) {
         return userRepository.findTaskSnapUsersByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
+//    Save the user, if the user already exists, throw an exception
     public void saveUser(TaskSnapUsers user) throws InstanceAlreadyExistsException {
         if (userRepository.findTaskSnapUsersByUsername(user.getUsername()).isPresent()) {
             throw new InstanceAlreadyExistsException("Email is already registered");
@@ -45,6 +48,7 @@ public class UserService {
         }
     }
 
+//    Authenticate the user
     public TaskSnapUsers authenticateUser(TaskSnapUsers user) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword())

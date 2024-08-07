@@ -28,6 +28,7 @@ public class TaskSnapUsers implements UserDetails {
     @Column(nullable = false)
     private String password;
 
+//    The following fields are for UserDetails interface
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of();

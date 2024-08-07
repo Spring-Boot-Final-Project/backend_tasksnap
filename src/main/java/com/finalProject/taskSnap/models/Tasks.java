@@ -38,11 +38,13 @@ public class Tasks {
 
     private String description;
 
+//    Assign the TaskSnapUsers object to the task
     @ManyToOne
     @JoinColumn(name = "fk_user_id")
     @Cascade(CascadeType.PERSIST)
     private TaskSnapUsers taskSnapUsers;
 
+//    Create column with the same value as foreign key
     @Column(name="fk_user_id", insertable = false, updatable = false)
     private Integer taskSnapUserId;
 }

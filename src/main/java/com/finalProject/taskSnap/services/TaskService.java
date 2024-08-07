@@ -15,6 +15,7 @@ public class TaskService {
         this.taskRepository = taskRepository;
     }
 
+//    Hide details of users when returning tasks
     public List<Tasks> hideUsers(List<Tasks> tasks){
         for(Tasks task: tasks){
             task.setTaskSnapUsers(null);

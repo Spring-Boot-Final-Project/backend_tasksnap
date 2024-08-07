@@ -20,6 +20,7 @@ public class UserController {
         this.userService = userService;
     }
 
+//    Get the detail of the current user who is logged in
     @GetMapping
     public ResponseEntity<TaskSnapUsers> getUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

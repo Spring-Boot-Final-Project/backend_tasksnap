@@ -24,11 +24,13 @@ public class TaskController {
         this.userService = userService;
     }
 
+//    Get the user id of the current user who is logged in
     public int getCurrentUserId(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return userService.getUserByUsername(authentication.getName()).getId();
     }
 
+    // List all tasks
     @GetMapping("/")
     public List<Tasks> homepage(){
         int currentUserId = getCurrentUserId();

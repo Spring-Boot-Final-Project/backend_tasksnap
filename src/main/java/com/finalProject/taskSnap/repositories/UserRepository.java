@@ -9,5 +9,4 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends JpaRepository<TaskSnapUsers, Integer> {
     Optional<TaskSnapUsers> findTaskSnapUsersByUsername(String username);
-    Optional<TaskSnapUsers> findTaskSnapUsersById(int id);
 }

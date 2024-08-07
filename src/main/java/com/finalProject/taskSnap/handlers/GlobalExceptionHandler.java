@@ -17,6 +17,15 @@ import java.net.URI;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    /**
+     * Handles various security-related exceptions and returns a ProblemDetail object.
+     *
+     * This method catches different types of security exceptions and creates a ProblemDetail
+     * object with appropriate HTTP status, message, and description.
+     *
+     * @param exception the exception to handle
+     * @return a ProblemDetail object containing error details
+     */
     @ExceptionHandler(Exception.class)
     public ProblemDetail handleSecurityException(Exception exception) {
         ProblemDetail errorDetail = null;
@@ -41,6 +50,14 @@ public class GlobalExceptionHandler {
         return errorDetail;
     }
 
+    /**
+     * Creates a ProblemDetail object with the specified status, message, and description.
+     *
+     * @param status the HTTP status
+     * @param message the error message
+     * @param description the error description
+     * @return a ProblemDetail object containing the error details
+     */
     private ProblemDetail createProblemDetail(HttpStatus status, String message, String description) {
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(status, message);
         problemDetail.setType(URI.create("error"));

@@ -19,6 +19,13 @@ public class UserDetailService implements UserDetailsService {
         this.userRepository = userRepository;
     }
 
+    /**
+     * Loads the user details by username.
+     *
+     * @param username the username of the user
+     * @return the UserDetails object containing user information
+     * @throws UsernameNotFoundException if the user is not found
+     */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<TaskSnapUsers> userOp = userRepository.findTaskSnapUsersByUsername(username);

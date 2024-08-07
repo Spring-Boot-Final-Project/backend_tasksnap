@@ -25,6 +25,13 @@ public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final GlobalExceptionHandler globalExceptionHandler;
 
+    /**
+     * Constructs a SecurityConfig with the specified JwtAuthenticationFilter, AuthenticationProvider, and GlobalExceptionHandler.
+     *
+     * @param jwtAuthenticationFilter the filter for JWT authentication
+     * @param authenticationProvider the provider for authentication
+     * @param globalExceptionHandler the handler for global exceptions
+     */
     public SecurityConfig(
             JwtAuthenticationFilter jwtAuthenticationFilter,
             AuthenticationProvider authenticationProvider,
@@ -35,6 +42,14 @@ public class SecurityConfig {
         this.globalExceptionHandler = globalExceptionHandler;
     }
 
+    /**
+     * Configures the security filter chain.
+     *
+     * @param http the HttpSecurity to modify
+     * @param globalExceptionHandler the handler for global exceptions
+     * @return the configured SecurityFilterChain
+     * @throws Exception if an error occurs during configuration
+     */
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http, GlobalExceptionHandler globalExceptionHandler) throws Exception {
         http.cors(cors -> cors.configurationSource(corsConfigurationSource()))
@@ -87,6 +102,11 @@ public class SecurityConfig {
         return http.build();
     }
 
+    /**
+     * Configures CORS settings.
+     *
+     * @return the configured CorsConfigurationSource
+     */
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();

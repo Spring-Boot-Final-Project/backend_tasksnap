@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class LoginResponse {
+//    This class is used to send the token and expiration time to the client
     private String token;
     private long expiresIn;
 }
