@@ -2,14 +2,22 @@ package com.finalProject.taskSnap.services;
 
 import com.finalProject.taskSnap.models.Tasks;
 import com.finalProject.taskSnap.repositories.TaskRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class TaskService {
     private final TaskRepository taskRepository;
+
+    @Autowired
+    private EmailService emailService;
 
     public TaskService(TaskRepository taskRepository){
         this.taskRepository = taskRepository;
@@ -31,6 +39,11 @@ public class TaskService {
     // List All tasks
     public List<Tasks> getAllTask(int id){
         return hideUsers(taskRepository.findByTaskSnapUserId(id));
+    }
+
+    // Manually send email to all tasks, only for send email.
+    public List<Tasks> sendEmailToAllTask() {
+        return taskRepository.findAll();
     }
 
     // List task by id
@@ -64,5 +77,20 @@ public class TaskService {
     public void deleteTask(int id){
         taskRepository.deleteById(id);
     }
+
+
+    @Scheduled(cron = "0 0 0 * * ?") // Runs every 24 hours
+    public void checkTasksAndSendEmail() {
+        LocalDate tomorrow = LocalDate.now().plusDays(1);
+        LocalTime startTime = LocalTime.of(0, 0); // 00:00
+
+        // Find all tasks due tomorrow at 00:00
+        List<Tasks> tasksToNotify = taskRepository.findByDueDateAndDueTime(tomorrow, startTime);
+
+        for (Tasks task : tasksToNotify) {
+            emailService.sendTaskReminder(task);
+        }
+    }
+
 
 }
