@@ -15,22 +15,12 @@ import java.util.List;
 public class EmailTestController {
 
     @Autowired
-    private EmailService emailService;
-
-    @Autowired
     private TaskService taskService;
 
     @GetMapping("/testSendEmails")
     public String taskSendEmails() {
-
         try {
-            // Fetch all tasks from the database
-            List<Tasks> allTasks = taskService.sendEmailToAllTask();
-
-            // Iterate through each task and send an email
-            for (Tasks task : allTasks) {
-                emailService.sendTaskReminder(task);
-            }
+            taskService.sendEmailForTasksDueWithin24Hours();
             return "Emails sent successfully!";
         } catch (Exception e) {
             return "Emails sent failed! Error: " + e.getMessage();

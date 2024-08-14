@@ -42,9 +42,9 @@ public class TaskService {
     }
 
     // Manually send email to all tasks, only for send email.
-    public List<Tasks> sendEmailToAllTask() {
-        return taskRepository.findAll();
-    }
+//    public List<Tasks> sendEmailToAllTask() {
+//        return taskRepository.findAll();
+//    }
 
     // List task by id
     public Optional<Tasks> getTaskById(int id){
@@ -78,19 +78,50 @@ public class TaskService {
         taskRepository.deleteById(id);
     }
 
+    // Common method to find and send emails for tasks due within 24 hours
+    public void sendEmailForTasksDueWithin24Hours(){
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime in24Hours = now.plusHours(24);
 
-    @Scheduled(cron = "0 0 0 * * ?") // Runs every 24 hours
-    public void checkTasksAndSendEmail() {
-        LocalDate tomorrow = LocalDate.now().plusDays(1);
-        LocalTime startTime = LocalTime.of(0, 0); // 00:00
+        LocalDate dueDate = in24Hours.toLocalDate();
+        LocalTime dueTime = in24Hours.toLocalTime();
 
-        // Find all tasks due tomorrow at 00:00
-        List<Tasks> tasksToNotify = taskRepository.findByDueDateAndDueTime(tomorrow, startTime);
+        // Find all tasks due within the next 24 hours
+        List<Tasks> tasksToNotify = taskRepository.findTasksDueWithin24Hours(now.toLocalDate(), dueDate, now.toLocalTime(), dueTime);
 
         for (Tasks task : tasksToNotify) {
             emailService.sendTaskReminder(task);
         }
     }
+
+    // Notification of mailing
+
+    // Scheduled method to run every 12 hours
+    @Scheduled(cron = "0 0 0/12 * * ?")
+    public void checkTasksAndSendEmail() {
+        sendEmailForTasksDueWithin24Hours();
+    }
+
+    // Method to be called manually
+    public List<Tasks> sendEmailToAllTask() {
+        sendEmailForTasksDueWithin24Hours();
+        return taskRepository.findAll();
+    }
+
+
+    // Notification of mailing
+//    @Scheduled(cron = "0 0 0/12 * * ?") // Runs every 12 hours
+//    public void checkTasksAndSendEmail() {
+//        LocalDate tomorrow = LocalDate.now().plusDays(1);
+//        LocalTime startTime = LocalTime.of(0, 0); // 00:00
+//
+//        // Find all tasks due tomorrow at 00:00
+//        List<Tasks> tasksToNotify = taskRepository.findByDueDateAndDueTime(tomorrow, startTime);
+//
+//        for (Tasks task : tasksToNotify) {
+//            emailService.sendTaskReminder(task);
+//        }
+//    }
 
 
 }
